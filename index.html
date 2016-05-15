@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>Сети Петри</title>
+
+    <link href="interactive_tree.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="d3.v2.js"></script>
+    <script type="text/javascript" src="interactive_tree.js"></script>
+
+</head>
+<body>
+    <svg width="500" height="400">
+        <marker id="triangle" viewBox="0 0 10 10" refX="0" refY="5" markerUnits="strokeWidth" markerWidth="5" markerHeight="5" orient="auto">
+        <path d="M 0 0 L 10 5 L 0 10 z"/>
+        </marker>
+        <circle id="p1" cx="240" cy="40" r="25" stroke="black" stroke-width="1" fill="white"/>
+        <circle id="p2" cx="120" cy="120" r="25" stroke="black" stroke-width="1" fill="white"/>
+        <circle id="p3" cx="360" cy="120" r="25" stroke="black" stroke-width="1" fill="white"/>
+        <circle id="p4" cx="120" cy="240" r="25" stroke="black" stroke-width="1" fill="white"/>
+        <circle id="p5" cx="360" cy="240" r="25" stroke="black" stroke-width="1" fill="white"/>
+        <rect id="t1" x="155" y="75" width="50" height="4" fill="black"/>
+        <rect id="t2" x="275" y="75" width="50" height="4" fill="black"/>
+        <rect id="t3" x="95" y="175" width="50" height="4" fill="black"/>
+        <rect id="t4" x="335" y="175" width="50" height="4" fill="black"/>
+        <rect id="t5" x="215" y="320" width="50" height="4" fill="black"/>
+        <rect id="t6" x="420" y="120" width="50" height="4" fill="black"/>
+        <line x1="216" y1="51" x2="190" y2="70" stroke="black" stroke-width="2" marker-end="url(#triangle)"/>
+        <line x1="185" y1="74" x2="150" y2="101" stroke="black" stroke-width="2" marker-end="url(#triangle)"/>
+        <line x1="120" y1="145" x2="120" y2="168" stroke="black" stroke-width="2" marker-end="url(#triangle)"/>
+        <line x1="120" y1="179" x2="120" y2="207" stroke="black" stroke-width="2" marker-end="url(#triangle)"/>
+        <line x1="120" y1="265" x2="228" y2="316" stroke="black" stroke-width="2" marker-end="url(#triangle)"/>
+        <line x1="264" y1="51" x2="290" y2="70" stroke="black" stroke-width="2" marker-end="url(#triangle)"/>
+        <line x1="295" y1="74" x2="330" y2="101" stroke="black" stroke-width="2" marker-end="url(#triangle)"/>
+        <line x1="360" y1="145" x2="360" y2="168" stroke="black" stroke-width="2" marker-end="url(#triangle)"/>
+        <line x1="360" y1="179" x2="360" y2="207" stroke="black" stroke-width="2" marker-end="url(#triangle)"/>
+        <line x1="360" y1="265" x2="252" y2="316" stroke="black" stroke-width="2" marker-end="url(#triangle)"/>
+        <path d="M242 324 L242 350 L80 350 L80 40 L207 40" stroke="black" stroke-width="2" fill="none" marker-end="url(#triangle)"/>
+        <path d="M379 105 L440 105 L440 110" stroke="black" stroke-width="2" fill="none" marker-end="url(#triangle)"/>
+        <path d="M440 115 L440 135 L388 135" stroke="black" stroke-width="2" fill="none" marker-end="url(#triangle)"/>
+        <path d="M455 121 L455 244 L393 244" stroke="black" stroke-width="2" fill="none" marker-end="url(#triangle)"/>
+    </svg>
+
+    <div id="chart"></div>
+    <script type="text/javascript">
+        render_tree("data.json");
+    </script>
+</body>
+</html>
