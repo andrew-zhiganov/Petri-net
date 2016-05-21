@@ -1,6 +1,6 @@
-function render_tree(json_file) {
+function render_tree(json_obj) {
     var margin = {top: 20, right: 120, bottom: 20, left: 120},
-        width = 1300 - margin.right - margin.left,
+        width = 5000 - margin.right - margin.left,
         height = 940 - margin.top - margin.bottom;
 
     var i = 0,
@@ -21,22 +21,35 @@ function render_tree(json_file) {
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    d3.json(json_file, function (data) {
-        root = data;
+    // d3.json(json_file, function (data) {
+    //     root = data;
+    //     root.x0 = height / 2;
+    //     root.y0 = 0;
+    //
+    //     function collapse(d) {
+    //         if (d.children) {
+    //             d._children = d.children;
+    //             d._children.forEach(collapse);
+    //             d.children = null;
+    //         }
+    //     }
+    //
+    //     root.children.forEach(collapse);
+    //     update(root);
+    // });
+
+    root = json_obj;
         root.x0 = height / 2;
         root.y0 = 0;
-
-        function collapse(d) {
-            if (d.children) {
-                d._children = d.children;
-                d._children.forEach(collapse);
-                d.children = null;
+    function collapse(d) {
+                if (d.children) {
+                    d._children = d.children;
+                    d._children.forEach(collapse);
+                    d.children = null;
+                }
             }
-        }
-
-        root.children.forEach(collapse);
+    root.children.forEach(collapse);
         update(root);
-    });
 
     d3.select(self.frameElement).style("height", "800px");
 
