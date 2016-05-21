@@ -36,9 +36,9 @@ var transitions = {
     }
 };
 
-function genTree(startMark){
-
+function genTree(startMark, nesting){
     marksArray = [];
+
     JSONObject = {
         "name": "",
         "mark": startMark,
@@ -47,16 +47,16 @@ function genTree(startMark){
         "path": [],
         "children": []
     };
-    // marksArray.push({"mark": startMark, "path": []});
     
-    proceedTree(JSONObject);
-    console.log(marksArray);
-    console.log(JSONObject);
+    proceedTree(JSONObject, nesting);
+    //console.log(marksArray);
+    // console.log(JSONObject);
+    $('#chart').empty();
+
     render_tree(JSONObject);
 }
 
-function proceedTree(obj){
-    // console.log(obj);
+function proceedTree(obj, nesting){
     for(var i = 0; i < marksArray.length; i++){
         if(obj["mark"] == marksArray[i]["mark"]){
             obj["status"] = "(дубль)";
@@ -68,12 +68,10 @@ function proceedTree(obj){
             "path": obj["path"]
         });
     }
-    if(obj["status"] == "OK"){
-        obj["mark"].forEach(function(item){
-            if(item > 2){obj["status"] = "(w)"};
-        });
+    if(obj["status"] == "OK" && obj["path"].length >= nesting - 1){
+        obj["status"] = "(w)";
     }
-    if(obj["status"] == "OK") {
+    if(obj["status"] == "OK"){
         var mark = obj["mark"];
 
         var deadlock = true;
@@ -82,14 +80,13 @@ function proceedTree(obj){
             var inputPoses = transitions[item]["input"];
             var outputPoses = transitions[item]["output"];
             var launch = true;
-            // console.log(inputPoses , outputPoses);
             inputPoses.forEach(function(iitem, i, arr){
                 if(mark[iitem] - 1 < 0){
                     launch = false;
                 }
 
             });
-            console.log(launch, item);
+            // console.log(launch, item);
             if(launch){
                 var newMark = mark.slice();
 
@@ -99,10 +96,8 @@ function proceedTree(obj){
                 outputPoses.forEach(function(item, i, arr){
                     newMark[item] += 1;
                 });
-                console.log(newMark);
                 var newPath = obj["path"].slice();
                 newPath.push(item);
-                console.log(newPath);
                 obj["children"].push({
                     "name": "",
                     "mark": newMark,
@@ -119,7 +114,7 @@ function proceedTree(obj){
         }
         else{
             obj["children"].forEach(function(item){
-                proceedTree(item);
+                proceedTree(item, nesting);
             });
         }
     }
