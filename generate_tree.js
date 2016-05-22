@@ -49,16 +49,21 @@ function genTree(startMark, nesting){
     };
     
     proceedTree(JSONObject, nesting);
-    //console.log(marksArray);
+    // console.log(marksArray);
     // console.log(JSONObject);
     $('#chart').empty();
 
-    render_tree(JSONObject);
+    if($('#tree')[0].checked){
+        renderFullTree(JSONObject);
+    }
+    else{
+        renderTree(JSONObject);
+    }
 }
 
 function proceedTree(obj, nesting){
     for(var i = 0; i < marksArray.length; i++){
-        if(obj["mark"] == marksArray[i]["mark"]){
+        if(JSON.stringify(obj["mark"]) == JSON.stringify(marksArray[i]["mark"])){
             obj["status"] = "(дубль)";
         }
     }

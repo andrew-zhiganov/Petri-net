@@ -8,6 +8,7 @@
     <script type="text/javascript" src="d3.v2.js"></script>
     <script type="text/javascript" src="jquery-2.2.4.min.js"></script>
     <script type="text/javascript" src="interactive_tree.js"></script>
+    <script type="text/javascript" src="interactive_tree_full.js"></script>
     <script type="text/javascript" src="generate_tree.js"></script>
 </head>
 <body>
@@ -69,15 +70,16 @@
             <td valign="top">
                 <table style="margin-left: 0px; margin-top: 50px" border="0px">
                     <tr><td></td><td><div style="text-align: center; font-family: 'Comic Sans MS';">Введите порядок<br>вложенности</div></td></tr>
-                    <tr><td></td><td align="center"><input id="nes" type="number" placeholder="P1"></td></tr>
+                    <tr><td></td><td align="center"><input id="nes" type="number" placeholder="1..10, 10 - default"></td></tr>
                     <tr><td></td><td><div style="text-align: center; font-family: 'Comic Sans MS';">Введите начальную<br>маркировку</div></td></tr>
-                    <tr><td>P1</td><td align="center"><input id="p1" type="number" placeholder="P1"></td></tr>
-                    <tr><td>P2</td><td align="center"><input id="p2" type="number" placeholder="P2"></td></tr>
-                    <tr><td>P3</td><td align="center"><input id="p3" type="number" placeholder="P3"></td></tr>
-                    <tr><td>P4</td><td align="center"><input id="p4" type="number" placeholder="P4"></td></tr>
-                    <tr><td>P5</td><td align="center"><input id="p5" type="number" placeholder="P5"></td></tr>
+                    <tr><td>P1</td><td align="center"><input id="p1" type="number" placeholder="0"></td></tr>
+                    <tr><td>P2</td><td align="center"><input id="p2" type="number" placeholder="0"></td></tr>
+                    <tr><td>P3</td><td align="center"><input id="p3" type="number" placeholder="0"></td></tr>
+                    <tr><td>P4</td><td align="center"><input id="p4" type="number" placeholder="0"></td></tr>
+                    <tr><td>P5</td><td align="center"><input id="p5" type="number" placeholder="0"></td></tr>
                     <tr><td></td>
                         <td>
+                            <label style="font-family: 'Comic Sans MS'; font-size: 12px"><input type="checkbox" id="tree">Раскрыть дерево</label>
                             <div style="text-align: center;">
                                 <input style="font-family: 'Comic Sans MS'; width:150px" type="button" id="genTree" onclick="makeStartMark();" value="Построить дерево" />
                             </div>
@@ -85,25 +87,7 @@
                     </tr>
                 </table>
             </td>
-            <td id="append" valign="top">
-                <table style="margin-left: 50px; margin-top: 50px" border="0px">
-                    <tr><td></td><td align="center"><div style="text-align: center; font-family: 'Comic Sans MS';">Введите маркировку<br>для поиска</div></td></tr>
-                    <tr><td>P1</td><td align="center"><input id="op1" type="number" placeholder="P1"></td></tr>
-                    <tr><td>P2</td><td align="center"><input id="op2" type="number" placeholder="P2"></td></tr>
-                    <tr><td>P3</td><td align="center"><input id="op3" type="number" placeholder="P3"></td></tr>
-                    <tr><td>P4</td><td align="center"><input id="op4" type="number" placeholder="P4"></td></tr>
-                    <tr><td>P5</td><td align="center"><input id="op5" type="number" placeholder="P5"></td></tr>
-                    <tr><td></td>
-                        <td>
-                            <div style="text-align: center;">
-                                <input style="font-family: 'Comic Sans MS'; width:150px" type="button" id="findMark" onclick="findMark();" value="Найти"/>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr><td></td><td align="center"><div style="text-align: center; font-family: 'Comic Sans MS';">Переходы</div></td></tr>
-                    <tr><td></td><td align="center"><input id="out_edit" type="text" placeholder="Здесь будут переходы"></td></tr>
-                </table>
-            </td>
+            <td id="append" valign="top"></td>
         </tr>
     </table>
     <div id="chart"></div>
@@ -145,7 +129,7 @@
             var nesting = Number($('input#nes').val());
         }
         else{
-            var nesting = 2;
+            var nesting = 10;
         }
 
         $('text#p1').text(startMark[0]);
@@ -155,11 +139,64 @@
         $('text#p5').text(startMark[4]);
 
         genTree(startMark, nesting);
-//        if(){
-//
-//        }
-//        makeForm();
+        var form = $('<table style="margin-left: 50px; margin-top: 50px" border="0px"><tr><td></td><td align="center"><div style="text-align: center; font-family: Comic Sans MS;">Введите маркировку<br>для поиска</div></td></tr> <tr><td>P1</td><td align="center"><input id="op1" type="number" placeholder="0"></td></tr> <tr><td>P2</td><td align="center"><input id="op2" type="number" placeholder="0"></td></tr> <tr><td>P3</td><td align="center"><input id="op3" type="number" placeholder="0"></td></tr> <tr><td>P4</td><td align="center"><input id="op4" type="number" placeholder="0"></td></tr> <tr><td>P5</td><td align="center"><input id="op5" type="number" placeholder="0"></td></tr> <tr><td></td> <td> <div style="text-align: center;"> <input style="font-family: Comic Sans MS; width:150px" type="button" id="findMark" onclick="findMark();" value="Найти"/> </div> </td> </tr> <tr><td></td><td align="center"><div style="text-align: center; font-family: Comic Sans MS;">Переходы</div></td></tr> <tr><td></td><td align="center"><input id="out_edit" type="text" placeholder="Результат"></td></tr> </table>');
+        $('#append').empty();
+        $('#append').append(form);
         return;
+    }
+    function findMark(){
+        var mark = [];
+        if(Number($('input#op1').val()) && $('input#op1').val() >= 0){
+            mark.push(Number($('input#op1').val()));
+        }
+        else{
+            mark.push(0);
+        }
+        if(Number($('input#op2').val()) && $('input#op2').val() >= 0){
+            mark.push(Number($('input#op2').val()));
+        }
+        else{
+            mark.push(0);
+        }
+        if(Number($('input#op3').val()) && $('input#op3').val() >= 0){
+            mark.push(Number($('input#op3').val()));
+        }
+        else{
+            mark.push(0);
+        }
+        if(Number($('input#op4').val()) && $('input#op4').val() >= 0){
+            mark.push(Number($('input#op4').val()));
+        }
+        else{
+            mark.push(0);
+        }
+        if(Number($('input#op5').val()) && $('input#op5').val() >= 0){
+            mark.push(Number($('input#op5').val()));
+        }
+        else{
+            mark.push(0);
+        }
+
+        var found = false;
+        for(var key in marksArray){
+            if(JSON.stringify(marksArray[key]["mark"]) == JSON.stringify(mark)){
+                if(marksArray[key]["path"].length == 0){
+                    $('#out_edit').val("root");
+                }
+                else{
+                    var output = "";
+                    for(var kkey in marksArray[key]["path"]){
+                        output = output + marksArray[key]["path"][kkey] + ',';
+                    }
+
+                    $('#out_edit').val(output.slice(0, -1));
+                }
+                found = true;
+            }
+        }
+        if(!found){
+            $('#out_edit').val("Маркировка не найдена");
+        }
     }
 </script>
 </html>
